@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -10,9 +11,12 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float playerSpeed;
     [SerializeField] private float playerPos_X;
     [SerializeField] private float playerPos_Y;
+
+
+    private Rigidbody2D rb;
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -28,6 +32,14 @@ public class PlayerControl : MonoBehaviour
 
     void UpdatePosition(float x, float y)
     {
-        transform.Translate(new Vector2(x,y) * (playerSpeed * Time.deltaTime));
+        rb.MovePosition((Vector2)transform.position + (new Vector2(0, y) * (playerSpeed * Time.deltaTime)));
+    }
+
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.transform.tag == "WALL")
+        {
+            rb.velocity = Vector2.zero;
+        }
     }
 }
