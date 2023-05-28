@@ -11,6 +11,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float playerSpeed;
     [SerializeField] private float playerPos_X;
     [SerializeField] private float playerPos_Y;
+    [SerializeField] private bool isPlayer1;
 
 
     private Rigidbody2D rb;
@@ -22,12 +23,25 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Input.GetKey("up") || Input.GetKey("down"))
+        if (isPlayer1)
         {
-            playerPos_X = 0;
-            playerPos_Y = Input.GetAxis("Vertical");
-            UpdatePosition(playerPos_X, playerPos_Y);
+            if (Input.GetKey("up") || Input.GetKey("down"))
+            {
+                playerPos_X = 0;
+                playerPos_Y = Input.GetAxis("Vertical");
+                UpdatePosition(playerPos_X, playerPos_Y);
+            }
         }
+        else
+        {
+            if (Input.GetKey("w") || Input.GetKey("s"))
+            {
+                playerPos_X = 0;
+                playerPos_Y = Input.GetAxis("Vertical1");
+                UpdatePosition(playerPos_X, playerPos_Y);
+            }
+        }
+            
     }
 
     void UpdatePosition(float x, float y)
