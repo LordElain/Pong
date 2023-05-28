@@ -26,7 +26,7 @@ public class GM : MonoBehaviour
     {
         GameRunning = true;
         ball.chooseDirection();
-        ball.GameStart();
+        ball.Movement();
     }
 
     // Update is called once per frame
@@ -42,6 +42,7 @@ public class GM : MonoBehaviour
     {
         addPoints(WallName);
         ball.Reset();
+        ball.Movement();
     }
 
     void addPoints(string WallName)

@@ -16,9 +16,9 @@ public class Ball : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    public void chooseDirection()
+    public int chooseDirection()
     {
-        chosenSide = Random.Range(0, 2);
+        return Random.Range(0, 2);
         //0 - Left, 1 - Right
     }
 
@@ -27,23 +27,19 @@ public class Ball : MonoBehaviour
         transform.position = Vector2.zero;
     }
 
-    public void GameStart()
+    public void Movement()
     {
-        //rb.MovePosition((Vector2)transform.position + (new Vector2(0, y) * (playerSpeed * Time.deltaTime)));
-
+        chosenSide = chooseDirection();
+        var coordY = Random.Range(-1, 2); 
+        
         if (chosenSide == 1)
         {
-            rb.velocity = Vector2.right * ballSpeed;
+            rb.velocity = new Vector2(1, coordY) * ballSpeed;
         }
         else
         {
-            rb.velocity = Vector2.left * ballSpeed;
+            rb.velocity = new Vector2(-1, coordY) * ballSpeed;
         }
     }
 
-    public void Movement()
-    {
-        rb.velocity = new Vector2(-1, -1) * ballSpeed;
-    }
-    
 }
