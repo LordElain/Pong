@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GM : MonoBehaviour
 {
@@ -21,9 +22,17 @@ public class GM : MonoBehaviour
 
     [SerializeField] private GameObject wall_Left;
     [SerializeField] private GameObject wall_Right;
-    // Start is called before the first frame update
+    [SerializeField] private GameObject wall_Up;
+    [SerializeField] private GameObject wall_Down;
+    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject player2;
+    [SerializeField] private Camera mainCamera;
+    [SerializeField] private Text scoreP1_Text;
+    [SerializeField] private Text scoreP2_Text;
+    // Start is called before the first frame update1
     void Start()
     {
+        SetupPosition();
         GameRunning = true;
         ball.chooseDirection();
         ball.Movement();
@@ -55,5 +64,24 @@ public class GM : MonoBehaviour
         {
             scoreP2++;
         }
+        updateUI();
+    }
+
+    void SetupPosition()
+    {
+        Vector3 stageDimensions = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.nearClipPlane));
+        wall_Left.transform.position = new Vector3(-stageDimensions.x - 0.5f, 0, 0);
+        wall_Right.transform.position = new Vector3(stageDimensions.x + 0.5f, 0,0);
+        wall_Up.transform.position = new Vector3(0,stageDimensions.y - 0.2f,0);
+        wall_Down.transform.position = new Vector3(0, -stageDimensions.y + 0.2f, 0);
+
+        player.transform.position = new Vector3(stageDimensions.x - 1f, 0, 0);
+        player2.transform.position = new Vector3(-stageDimensions.x + 1f, 0, 0);
+    }
+
+    void updateUI()
+    {
+        scoreP1_Text.text = scoreP1.ToString();
+        scoreP2_Text.text = scoreP2.ToString();
     }
 }
