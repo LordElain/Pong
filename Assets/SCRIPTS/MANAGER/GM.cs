@@ -16,6 +16,7 @@ public class GM : MonoBehaviour
     {
         GameRunning = true;
         ball.chooseDirection();
+        ball.GameStart();
     }
 
     // Update is called once per frame
@@ -23,7 +24,7 @@ public class GM : MonoBehaviour
     {
         if (GameRunning)
         {
-            ball.GameStart();
+           
         }
     }
 

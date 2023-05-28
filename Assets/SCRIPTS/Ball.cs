@@ -48,10 +48,6 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D col)
     {
-        Debug.Log("TRIGGERED");
-        if (col.gameObject.tag == "WALL" || col.gameObject.tag == "PLAYER")
-        {
-            Movement();
-        }
+
     }
 }
