@@ -11,6 +11,16 @@ public class GM : MonoBehaviour
     [SerializeField] private Ball ball;
 
     #endregion
+
+    #region UI
+
+    private int scoreP1;
+    private int scoreP2;
+
+    #endregion
+
+    [SerializeField] private GameObject wall_Left;
+    [SerializeField] private GameObject wall_Right;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,8 +38,21 @@ public class GM : MonoBehaviour
         }
     }
 
-    void Goal()
+    public void Goal(string WallName)
     {
+        addPoints(WallName);
         ball.Reset();
+    }
+
+    void addPoints(string WallName)
+    {
+        if (WallName.Contains("LEFT"))
+        {
+            scoreP1++;
+        }
+        else
+        {
+            scoreP2++;
+        }
     }
 }

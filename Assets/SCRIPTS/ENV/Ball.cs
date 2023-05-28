@@ -45,9 +45,5 @@ public class Ball : MonoBehaviour
     {
         rb.velocity = new Vector2(-1, -1) * ballSpeed;
     }
-
-    private void OnCollisionEnter2D(Collision2D col)
-    {
-
-    }
+    
 }
