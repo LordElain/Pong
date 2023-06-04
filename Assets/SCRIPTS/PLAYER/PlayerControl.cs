@@ -13,40 +13,41 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float playerPos_Y;
     [SerializeField] private bool isPlayer1;
 
+    private Control newPlayerInput;
 
     private Rigidbody2D rb;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        newPlayerInput = new Control();
+        playerPos_X = 0;
+        newPlayerInput.Enable();
+        if (isPlayer1)
+        {
+            newPlayerInput.Gameplay.Movement.performed += moving =>
+            {
+                playerPos_Y = moving.ReadValue<float>();
+            };
+        }
+        else
+        {
+            newPlayerInput.Gameplay.Movement2.performed += moving =>
+            {
+                playerPos_Y = moving.ReadValue<float>();
+            };
+        }
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (isPlayer1)
-        {
-            if (Input.GetKey("up") || Input.GetKey("down"))
-            {
-                playerPos_X = 0;
-                playerPos_Y = Input.GetAxis("Vertical");
-                UpdatePosition(playerPos_X, playerPos_Y);
-            }
-        }
-        else
-        {
-            if (Input.GetKey("w") || Input.GetKey("s"))
-            {
-                playerPos_X = 0;
-                playerPos_Y = Input.GetAxis("Vertical1");
-                UpdatePosition(playerPos_X, playerPos_Y);
-            }
-        }
-            
+        UpdatePosition(playerPos_X, playerPos_Y);
     }
 
     void UpdatePosition(float x, float y)
     {
-        rb.MovePosition((Vector2)transform.position + (new Vector2(0, y) * (playerSpeed * Time.deltaTime)));
+        rb.velocity = new Vector2(x, y * playerSpeed);
+        //((Vector2)transform.position + (new Vector2(0, y) * (playerSpeed * Time.deltaTime)))
     }
 
     private void OnCollisionEnter2D(Collision2D col)
