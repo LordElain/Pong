@@ -11,9 +11,14 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float playerSpeed;
     [SerializeField] private float playerPos_X;
     [SerializeField] private float playerPos_Y;
+    [SerializeField] private Vector2 playerPos;
     [SerializeField] private bool isPlayer1;
+    [SerializeField] private bool isPlayerAi;
+    [SerializeField] private float lerpSpeed;
 
     private Control newPlayerInput;
+
+    [SerializeField] private Ball ball;
 
     private Rigidbody2D rb;
     void Start()
@@ -21,33 +26,53 @@ public class PlayerControl : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         newPlayerInput = new Control();
         playerPos_X = 0;
+        playerPos = new Vector2(playerPos_X, playerPos_Y);
         newPlayerInput.Enable();
+        
         if (isPlayer1)
         {
             newPlayerInput.Gameplay.Movement.performed += moving =>
             {
-                playerPos_Y = moving.ReadValue<float>();
+                playerPos.y = moving.ReadValue<float>();
             };
         }
         else
         {
-            newPlayerInput.Gameplay.Movement2.performed += moving =>
+            if(!isPlayerAi)
             {
-                playerPos_Y = moving.ReadValue<float>();
-            };
+                newPlayerInput.Gameplay.Movement2.performed += moving =>
+                {
+                    playerPos.y = moving.ReadValue<float>();
+                };
+            }
         }
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        UpdatePosition(playerPos_X, playerPos_Y);
+        UpdatePosition(playerPos);
+        if (isPlayerAi)
+        {
+            if (ball.transform.position.y > transform.position.y)
+            {
+                if (rb.velocity.y < 0) rb.velocity = Vector2.zero;
+                playerPos = Vector2.up;
+                UpdatePosition(playerPos);
+            }
+            else
+            {
+                if (rb.velocity.y > 0) rb.velocity = Vector2.zero;
+                playerPos = Vector2.down;
+                UpdatePosition(playerPos);
+            }
+            
+        }
     }
 
-    void UpdatePosition(float x, float y)
+    void UpdatePosition(Vector2 PlayerPos)
     {
-        rb.velocity = new Vector2(x, y * playerSpeed);
-        //((Vector2)transform.position + (new Vector2(0, y) * (playerSpeed * Time.deltaTime)))
+        rb.velocity = Vector2.Lerp(rb.velocity, PlayerPos * playerSpeed, lerpSpeed * Time.deltaTime);
     }
 
     private void OnCollisionEnter2D(Collision2D col)
