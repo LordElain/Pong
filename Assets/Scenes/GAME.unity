@@ -1889,11 +1889,13 @@ MonoBehaviour:
   wall_Right: {fileID: 1399168811}
   wall_Up: {fileID: 1717770435}
   wall_Down: {fileID: 272848793}
-  player: {fileID: 1240957653}
-  player2: {fileID: 642738927}
+  _gameObject_player: {fileID: 1240957653}
+  _gameObject_player2: {fileID: 642738927}
   mainCamera: {fileID: 519420031}
   scoreP1_Text: {fileID: 555272177}
   scoreP2_Text: {fileID: 1095767386}
+  player1: {fileID: 1240957656}
+  player2: {fileID: 642738932}
 --- !u!4 &1267661595
 Transform:
   m_ObjectHideFlags: 0

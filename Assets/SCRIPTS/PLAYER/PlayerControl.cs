@@ -12,8 +12,8 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float playerPos_X;
     [SerializeField] private float playerPos_Y;
     [SerializeField] private Vector2 playerPos;
-    [SerializeField] private bool isPlayer1;
-    [SerializeField] private bool isPlayerAi;
+    [SerializeField] public bool isPlayer1;
+    [SerializeField] public bool isPlayerAi;
     [SerializeField] private float lerpSpeed;
 
     private Control newPlayerInput;
@@ -38,13 +38,10 @@ public class PlayerControl : MonoBehaviour
         }
         else
         {
-            if(!isPlayerAi)
+            newPlayerInput.Gameplay.Movement2.performed += moving =>
             {
-                newPlayerInput.Gameplay.Movement2.performed += moving =>
-                {
-                    playerPos.y = moving.ReadValue<float>();
-                };
-            }
+                playerPos.y = moving.ReadValue<float>();
+            };
         }
     }
 
