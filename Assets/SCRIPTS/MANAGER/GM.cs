@@ -10,6 +10,7 @@ public class GM : MonoBehaviour
 
     [SerializeField] private bool GameRunning;
     [SerializeField] private Ball ball;
+    [SerializeField] private int GameMode;
 
     #endregion
 
@@ -38,6 +39,9 @@ public class GM : MonoBehaviour
         SetupPosition();
         Setup();
         GameRunning = true;
+        GameMode = PlayerPrefs.GetInt("GameMode");
+        player1.playerSpeed = PlayerPrefs.GetInt("P1Speed");
+        player2.playerSpeed = PlayerPrefs.GetInt("P2Speed");
         ball.chooseDirection();
         ball.Movement();
     }

@@ -8,7 +8,7 @@ using UnityEngine.PlayerLoop;
 public class PlayerControl : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField] private float playerSpeed;
+    [SerializeField] public int playerSpeed;
     [SerializeField] private float playerPos_X;
     [SerializeField] private float playerPos_Y;
     [SerializeField] private Vector2 playerPos;

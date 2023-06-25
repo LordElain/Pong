@@ -17,6 +17,13 @@ public class MenuManager : MonoBehaviour
         Book.Add(Page1);
         Book.Add(Page2);
         Book.Add(Page3);
+
+        for (int i = 0; i < Book.Count; i++)
+        {
+            Book[i].SetActive(false);
+        }
+        
+        Book[0].SetActive(true);
     }
 
     public void SetupP1vsP2(string GameMode)
@@ -30,6 +37,8 @@ public class MenuManager : MonoBehaviour
                 
                 Book[0].SetActive(false);
                 Book[2].SetActive(true);
+                setSpeedP1(3);
+                setSpeedP2(3);
                 break;
             case "P1VSAI":
                 PlayerPrefs.SetInt("P1", 0);
@@ -82,5 +91,25 @@ public class MenuManager : MonoBehaviour
                 break;
         }
 
+    }
+
+    public void setSpeedP2(int Speed)
+    {
+        PlayerPrefs.SetInt("P2Speed", Speed);
+    }
+    public void setSpeedP1(int Speed)
+    {
+        PlayerPrefs.SetInt("P1Speed", Speed);
+    }
+
+    public void ChangeScene()
+    {
+        SceneManager.LoadScene("GAME");
+    }
+
+    public void setGameMode(int Mode)
+    {
+        // 0 - Classic, 1 - Modern
+        PlayerPrefs.SetInt("GameMode", Mode);
     }
 }

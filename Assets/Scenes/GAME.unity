@@ -1131,7 +1131,7 @@ MonoBehaviour:
   playerPos: {x: 0, y: 0}
   isPlayer1: 0
   isPlayerAi: 1
-  lerpSpeed: 1
+  lerpSpeed: 3
   ball: {fileID: 79062872}
 --- !u!114 &642738933
 MonoBehaviour:
