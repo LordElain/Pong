@@ -27,23 +27,60 @@ public class MenuManager : MonoBehaviour
             case "P1VSP2":
                 PlayerPrefs.SetInt("P1", 0);
                 PlayerPrefs.SetInt("P2", 0);
+                
+                Book[0].SetActive(false);
+                Book[2].SetActive(true);
                 break;
             case "P1VSAI":
                 PlayerPrefs.SetInt("P1", 0);
                 PlayerPrefs.SetInt("P2", 1);
+                
+                Book[0].SetActive(false);
+                Book[1].SetActive(true);
+                Book[2].SetActive(false);
                 break;
             case "AIVSAI":
                 PlayerPrefs.SetInt("P1", 1);
                 PlayerPrefs.SetInt("P2", 1);
+                SceneManager.LoadScene("GAME");
                 break;
             
             default:
                 PlayerPrefs.SetInt("P1", 0);
                 PlayerPrefs.SetInt("P2", 0);
+                Book[0].SetActive(false);
+                Book[2].SetActive(true);
                 break;
         }
         
-        SceneManager.LoadScene("GAME");
+    
     }
 
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void GoBack(int page)
+    {
+        switch (page)
+        {
+            case 0: 
+                Book[0].SetActive(true);
+                break;
+            case 1:
+                Book[page].SetActive(false);
+                Book[0].SetActive(true);
+                break;
+            case 2: 
+                Book[page].SetActive(false);
+                Book[0].SetActive(true);
+                break;
+            default: 
+                Book[0].SetActive(true);
+                break;
+        }
+
+    }
 }
