@@ -6,10 +6,10 @@ using Random = UnityEngine.Random;
 
 public class Ball : MonoBehaviour
 {
-    [SerializeField] private float ballSpeed;
+    [SerializeField] public float ballSpeed;
     [SerializeField] private int chosenSide;
 
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     // Start is called before the first frame update
     private void Start()
     {

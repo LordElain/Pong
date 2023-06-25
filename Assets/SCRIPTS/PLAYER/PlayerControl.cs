@@ -14,6 +14,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private Vector2 playerPos;
     [SerializeField] public bool isPlayer1;
     [SerializeField] public bool isPlayerAi;
+    [SerializeField] public bool Paused;
     [SerializeField] private float lerpSpeed;
 
     private Control newPlayerInput;
@@ -24,6 +25,7 @@ public class PlayerControl : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        Paused = false;
         newPlayerInput = new Control();
         playerPos_X = 0;
         playerPos = new Vector2(playerPos_X, playerPos_Y);
@@ -34,6 +36,11 @@ public class PlayerControl : MonoBehaviour
             newPlayerInput.Gameplay.Movement.performed += moving =>
             {
                 playerPos.y = moving.ReadValue<float>();
+            };
+
+            newPlayerInput.Gameplay.Pause.performed += context =>
+            {
+                Paused = !Paused;
             };
         }
         else

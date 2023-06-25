@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GM : MonoBehaviour
 {
 
     #region GameRunning
-
-    [SerializeField] private bool GameRunning;
+    
     [SerializeField] private Ball ball;
     [SerializeField] private int GameMode;
 
@@ -18,6 +18,7 @@ public class GM : MonoBehaviour
 
     private int scoreP1;
     private int scoreP2;
+    [SerializeField] private GameObject canvasPauseMenu;
 
     #endregion
 
@@ -33,15 +34,22 @@ public class GM : MonoBehaviour
 
     [SerializeField] private PlayerControl player1;
     [SerializeField] private PlayerControl player2;
+
+
+    [SerializeField] private int p1Vel;
+    [SerializeField] private int p2Vel;
+    [SerializeField] private float ballVel;
     // Start is called before the first frame update1
     void Start()
     {
         SetupPosition();
         Setup();
-        GameRunning = true;
         GameMode = PlayerPrefs.GetInt("GameMode");
         player1.playerSpeed = PlayerPrefs.GetInt("P1Speed");
         player2.playerSpeed = PlayerPrefs.GetInt("P2Speed");
+        p1Vel = player1.playerSpeed;
+        p2Vel = player2.playerSpeed;
+        ballVel = ball.ballSpeed;
         ball.chooseDirection();
         ball.Movement();
     }
@@ -49,9 +57,13 @@ public class GM : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameRunning)
+        if (!player1.Paused)
         {
-           
+            UnpauseMenu();
+        }
+        else
+        {
+            PauseMenu();
         }
     }
 
@@ -120,5 +132,23 @@ public class GM : MonoBehaviour
             player2.isPlayer1 = false;
             player2.isPlayerAi = true;
         }
+    }
+
+    void PauseMenu()
+    {
+        Time.timeScale = 0;
+        canvasPauseMenu.SetActive(true);
+    }
+
+    public void UnpauseMenu()
+    {
+        Time.timeScale = 1;
+        player1.Paused = false;
+        canvasPauseMenu.SetActive(false);
+    }
+
+    public void QuitGame()
+    {
+        SceneManager.LoadScene("MAIN MENU");
     }
 }
