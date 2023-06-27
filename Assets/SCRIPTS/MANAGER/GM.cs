@@ -7,41 +7,57 @@ using UnityEngine.UI;
 public class GM : MonoBehaviour
 {
 
+    [Header("GameRunning")]
     #region GameRunning
-    
     [SerializeField] private Ball ball;
+    [Range(0,1)]
     [SerializeField] private int GameMode;
 
     #endregion
 
+    [Header("UI")]
     #region UI
-
     private int scoreP1;
     private int scoreP2;
+    [Tooltip("Resolution of screen")]
+    [SerializeField] private Vector3 stageDimensions;
     [SerializeField] private GameObject canvasPauseMenu;
-
+    [SerializeField] private Camera mainCamera;
+    [SerializeField] private Text scoreP1_Text;
+    [SerializeField] private Text scoreP2_Text;
     #endregion
 
+    [Header("Playerfield")]
+    #region Playfield
     [SerializeField] private GameObject wall_Left;
     [SerializeField] private GameObject wall_Right;
     [SerializeField] private GameObject wall_Up;
     [SerializeField] private GameObject wall_Down;
     [SerializeField] private GameObject _gameObject_player;
     [SerializeField] private GameObject _gameObject_player2;
-    [SerializeField] private Camera mainCamera;
-    [SerializeField] private Text scoreP1_Text;
-    [SerializeField] private Text scoreP2_Text;
-
+    #endregion
+    
+    [Header("Player")]
     [SerializeField] private PlayerControl player1;
     [SerializeField] private PlayerControl player2;
-
-
     [SerializeField] private int p1Vel;
     [SerializeField] private int p2Vel;
     [SerializeField] private float ballVel;
+    
+
+    [Header("PowerUp")]
+    #region powerUp
+    [SerializeField] private GameObject powerUp;
+
+    [TextArea ()] 
+    [SerializeField] private string test;
+
+    #endregion
     // Start is called before the first frame update1
     void Start()
     {
+        stageDimensions = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.nearClipPlane));
+        SpawnPowerUp();
         SetupPosition();
         Setup();
         GameMode = PlayerPrefs.GetInt("GameMode");
@@ -89,7 +105,7 @@ public class GM : MonoBehaviour
 
     void SetupPosition()
     {
-        Vector3 stageDimensions = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.nearClipPlane));
+
         wall_Left.transform.position = new Vector3(-stageDimensions.x - 0.5f, 0, 0);
         wall_Right.transform.position = new Vector3(stageDimensions.x + 0.5f, 0,0);
         wall_Up.transform.position = new Vector3(0,stageDimensions.y - 0.2f,0);
@@ -150,5 +166,15 @@ public class GM : MonoBehaviour
     public void QuitGame()
     {
         SceneManager.LoadScene("MAIN MENU");
+    }
+    
+    [ContextMenu("Spawn")]
+    void SpawnPowerUp()
+    {
+        var coordX = Random.Range(-stageDimensions.x + 2, stageDimensions.x - 1);
+        var coordY = Random.Range(-stageDimensions.y + 1, stageDimensions.y); 
+        
+        powerUp.transform.position = new Vector3(coordX, coordY, 0);
+        powerUp.SetActive(true);
     }
 }
