@@ -49,6 +49,8 @@ public class GM : MonoBehaviour
     [SerializeField] private PlayerControl player2;
     [SerializeField] private int p1Vel;
     [SerializeField] private int p2Vel;
+    [SerializeField] private Vector3 p1Size;
+    [SerializeField] private Vector3 p2Size;
     [SerializeField] private float ballVel;
 
     #endregion
@@ -80,6 +82,7 @@ public class GM : MonoBehaviour
     #region powerUpValues
     
     [SerializeField] private int powerUpSpeed;
+    [SerializeField] private float powerUpSize;
     
 
     #endregion
@@ -90,12 +93,8 @@ public class GM : MonoBehaviour
         SpawnPowerUp();
         SetupPosition();
         Setup();
+        SetupOGValues();
         GameMode = PlayerPrefs.GetInt("GameMode");
-        player1.playerSpeed = PlayerPrefs.GetInt("P1Speed");
-        player2.playerSpeed = PlayerPrefs.GetInt("P2Speed");
-        p1Vel = player1.playerSpeed;
-        p2Vel = player2.playerSpeed;
-        ballVel = ball.ballSpeed;
         ball.chooseDirection();
         ball.Movement();
     }
@@ -127,9 +126,10 @@ public class GM : MonoBehaviour
 
             else
             {
-                if (Time.time >= powerUpSkillTimer)
+                powerUpSkillTimer += Time.deltaTime;
+                if (powerUpSkillTimer >= powerUpCooldown)
                 {
-                    powerUpSkillTimer = Time.time + powerUpCooldown;
+                    powerUpSkillTimer = 0;
                     ResetPowerUp();
                 }
             }
@@ -140,6 +140,16 @@ public class GM : MonoBehaviour
         }
     }
 
+    void SetupOGValues()
+    {
+        player1.playerSpeed = PlayerPrefs.GetInt("P1Speed");
+        player2.playerSpeed = PlayerPrefs.GetInt("P2Speed");
+        p1Vel = player1.playerSpeed;
+        p2Vel = player2.playerSpeed;
+        p1Size = _gameObject_player.transform.localScale;
+        p2Size = _gameObject_player2.transform.localScale;
+        ballVel = ball.ballSpeed;
+    }
     public void Goal(string WallName)
     {
         addPoints(WallName);
@@ -242,6 +252,7 @@ public class GM : MonoBehaviour
         powerupActive = true;
         var maxCount = powerUpIDs.Count;
         var activePowerUp = powerUpIDs[Random.Range(0, maxCount)];
+        activePowerUp = 1;
         powerUpUser = lastContactPlayer;
         activePowerUpID = activePowerUp;
         
@@ -249,6 +260,9 @@ public class GM : MonoBehaviour
         {
             case 0: 
                 PowerUp_Speed(false);
+                break;        
+            case 1:
+                PowerUp_Size(false);
                 break;
             default:
                 break;
@@ -263,6 +277,9 @@ public class GM : MonoBehaviour
         {
             case 0: 
                 PowerUp_Speed(true);
+                break;
+            case 1:
+                PowerUp_Size(true);
                 break;
             default:
                 break;
@@ -291,6 +308,32 @@ public class GM : MonoBehaviour
             else
             {
                 player2.playerSpeed = powerUpSpeed;
+            }
+        }
+    }
+
+    void PowerUp_Size(bool Resetstatus)
+    {
+        if (Resetstatus)
+        {
+            if (powerUpUser == 0)
+            {
+                _gameObject_player.transform.localScale = p1Size;
+            }
+            else
+            {
+                _gameObject_player2.transform.localScale = p2Size;
+            }
+        }
+        else
+        {
+            if (powerUpUser == 0)
+            {
+                _gameObject_player.transform.localScale += new Vector3(0, powerUpSize, 0);
+            }
+            else
+            {
+                _gameObject_player2.transform.localScale += new Vector3(0, powerUpSize, 0);
             }
         }
     }
