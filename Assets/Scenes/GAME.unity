@@ -307,6 +307,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballSpeed: 4
   chosenSide: 0
+  lastPlayerContact: 
+  gameManager: {fileID: 1267661594}
   rb: {fileID: 0}
 --- !u!212 &79062873
 SpriteRenderer:
@@ -950,7 +952,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &471352362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2380,7 +2382,7 @@ GameObject:
   - component: {fileID: 1259606689}
   m_Layer: 0
   m_Name: POWERUP
-  m_TagString: Untagged
+  m_TagString: POWERUP
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2500,6 +2502,8 @@ MonoBehaviour:
   p2Vel: 0
   ballVel: 0
   powerUp: {fileID: 1259606688}
+  lastContactPlayer: 0
+  powerUpUsed: 0
   test: 
 --- !u!4 &1267661595
 Transform:

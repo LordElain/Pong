@@ -49,6 +49,10 @@ public class GM : MonoBehaviour
     #region powerUp
     [SerializeField] private GameObject powerUp;
 
+    [SerializeField] public int lastContactPlayer;
+    [SerializeField] public bool powerUpUsed;
+    [SerializeField] public List<int> powerUpIDs = new List<int>();
+
     [TextArea ()] 
     [SerializeField] private string test;
 
@@ -76,6 +80,10 @@ public class GM : MonoBehaviour
         if (!player1.Paused)
         {
             UnpauseMenu();
+            if (powerUpUsed)
+            {
+                RandomPowerUp();
+            }
         }
         else
         {
@@ -176,5 +184,42 @@ public class GM : MonoBehaviour
         
         powerUp.transform.position = new Vector3(coordX, coordY, 0);
         powerUp.SetActive(true);
+    }
+
+    void RandomPowerUp()
+    {
+        powerUpUsed = false;
+        powerUp.SetActive(false);
+
+        var maxCount = powerUpIDs.Count;
+        var activePowerUp = powerUpIDs[Random.Range(0, maxCount)];
+
+        switch (activePowerUp)
+        {
+            case 0: 
+                PowerUp_Speed();
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    void ResetPowerUp()
+    {
+        
+    }
+
+    void PowerUp_Speed()
+    {
+        //lastContactPlayer == 0 ? player1.playerSpeed = 8 : player2.playerSpeed = 8;
+        if (lastContactPlayer == 0)
+        {
+            player1.playerSpeed = 8;
+        }
+        else
+        {
+            player2.playerSpeed = 8;
+        }
     }
 }
