@@ -9,6 +9,7 @@ public class GM : MonoBehaviour
 
     [Header("GameRunning")]
     #region GameRunning
+    
     [SerializeField] private Ball ball;
     [Range(0,1)]
     [SerializeField] private int GameMode;
@@ -17,6 +18,7 @@ public class GM : MonoBehaviour
 
     [Header("UI")]
     #region UI
+    
     private int scoreP1;
     private int scoreP2;
     [Tooltip("Resolution of screen")]
@@ -25,36 +27,60 @@ public class GM : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Text scoreP1_Text;
     [SerializeField] private Text scoreP2_Text;
+    
     #endregion
 
     [Header("Playerfield")]
     #region Playfield
+    
     [SerializeField] private GameObject wall_Left;
     [SerializeField] private GameObject wall_Right;
     [SerializeField] private GameObject wall_Up;
     [SerializeField] private GameObject wall_Down;
     [SerializeField] private GameObject _gameObject_player;
     [SerializeField] private GameObject _gameObject_player2;
+    
     #endregion
     
     [Header("Player")]
+    #region Player
+
     [SerializeField] private PlayerControl player1;
     [SerializeField] private PlayerControl player2;
     [SerializeField] private int p1Vel;
     [SerializeField] private int p2Vel;
     [SerializeField] private float ballVel;
-    
 
+    #endregion
+    
     [Header("PowerUp")]
     #region powerUp
-    [SerializeField] private GameObject powerUp;
-
+    
     [SerializeField] public int lastContactPlayer;
     [SerializeField] public bool powerUpUsed;
-    [SerializeField] public List<int> powerUpIDs = new List<int>();
-
+    
+    [SerializeField] private GameObject powerUp;
+    [SerializeField] private int activePowerUpID;
+    [SerializeField] private int powerUpUser;
+    [SerializeField] private List<int> powerUpIDs = new List<int>();
+    [SerializeField] private bool powerupActive;
+    [SerializeField] private float powerUpSpawnTimer; 
+    [SerializeField] private float powerUpSkillTimer;
+    
+    
+    [SerializeField] private float powerUpCooldown; 
+    [SerializeField] private float powerUpSpawnCooldown; 
+    
     [TextArea ()] 
     [SerializeField] private string test;
+
+    #endregion
+
+    [Header("PowerUp Values")]
+    #region powerUpValues
+    
+    [SerializeField] private int powerUpSpeed;
+    
 
     #endregion
     // Start is called before the first frame update1
@@ -80,9 +106,32 @@ public class GM : MonoBehaviour
         if (!player1.Paused)
         {
             UnpauseMenu();
-            if (powerUpUsed)
+            if (!powerupActive)
             {
-                RandomPowerUp();
+                if (!powerUp.gameObject.activeSelf)
+                {
+                    powerUpSpawnTimer += Time.deltaTime;
+                    
+                    if (powerUpSpawnTimer >= (powerUpSpawnCooldown + Random.Range(0,4)))
+                    {
+                        powerUpSpawnTimer = 0;
+                        SpawnPowerUp();
+                    }
+                }
+                
+                if (powerUpUsed)
+                {
+                    RandomPowerUp();
+                }
+            }
+
+            else
+            {
+                if (Time.time >= powerUpSkillTimer)
+                {
+                    powerUpSkillTimer = Time.time + powerUpCooldown;
+                    ResetPowerUp();
+                }
             }
         }
         else
@@ -190,14 +239,16 @@ public class GM : MonoBehaviour
     {
         powerUpUsed = false;
         powerUp.SetActive(false);
-
+        powerupActive = true;
         var maxCount = powerUpIDs.Count;
         var activePowerUp = powerUpIDs[Random.Range(0, maxCount)];
-
+        powerUpUser = lastContactPlayer;
+        activePowerUpID = activePowerUp;
+        
         switch (activePowerUp)
         {
             case 0: 
-                PowerUp_Speed();
+                PowerUp_Speed(false);
                 break;
             default:
                 break;
@@ -207,19 +258,40 @@ public class GM : MonoBehaviour
 
     void ResetPowerUp()
     {
-        
+        powerupActive = false;
+        switch (activePowerUpID)
+        {
+            case 0: 
+                PowerUp_Speed(true);
+                break;
+            default:
+                break;
+        }
     }
 
-    void PowerUp_Speed()
+    void PowerUp_Speed(bool Resetstatus)
     {
-        //lastContactPlayer == 0 ? player1.playerSpeed = 8 : player2.playerSpeed = 8;
-        if (lastContactPlayer == 0)
+        if (Resetstatus)
         {
-            player1.playerSpeed = 8;
+            if (powerUpUser == 0)
+            {
+                player1.playerSpeed = p1Vel;
+            }
+            else
+            {
+                player2.playerSpeed = p2Vel;
+            }
         }
         else
         {
-            player2.playerSpeed = 8;
+            if (lastContactPlayer == 0)
+            {
+                player1.playerSpeed = powerUpSpeed;
+            }
+            else
+            {
+                player2.playerSpeed = powerUpSpeed;
+            }
         }
     }
 }
