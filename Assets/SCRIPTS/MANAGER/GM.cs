@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class GM : MonoBehaviour
@@ -12,7 +14,7 @@ public class GM : MonoBehaviour
     
     [SerializeField] private Ball ball;
 
-    private SpriteRenderer ballSprite;
+    private SpriteRenderer _ballSprite;
     [Range(0,1)]
     [SerializeField] private int GameMode;
 
@@ -30,7 +32,7 @@ public class GM : MonoBehaviour
     [SerializeField] private Text scoreP1_Text;
     [SerializeField] private Text scoreP2_Text;
 
-    [SerializeField] private MenuManager _menuManager;
+    [SerializeField] private MenuManager menuManager;
     #endregion
 
     [Header("Playerfield")]
@@ -61,12 +63,12 @@ public class GM : MonoBehaviour
     [Header("PowerUp")]
     #region powerUp
     
-    [SerializeField] public int lastContactPlayer;
+    [SerializeField] public ENUM.PlayerVariation lastContactPlayer;
     [SerializeField] public bool powerUpUsed;
     
     [SerializeField] private GameObject powerUp;
     [SerializeField] private int activePowerUpID;
-    [SerializeField] private int powerUpUser;
+    [SerializeField] private ENUM.PlayerVariation powerUpUser;
     [SerializeField] private List<int> powerUpIDs = new List<int>();
     [SerializeField] private bool powerupActive;
     [SerializeField] private float powerUpSpawnTimer; 
@@ -96,13 +98,13 @@ public class GM : MonoBehaviour
     // Start is called before the first frame update1
     void Start()
     {
-        _menuManager.SetupBackground();
+        menuManager.SetupBackground();
         stageDimensions = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.nearClipPlane));
         SpawnPowerUp();
         SetupPosition();
         Setup();
         SetupOGValues();
-        ballSprite = ball.GetComponent<SpriteRenderer>();
+        _ballSprite = ball.GetComponent<SpriteRenderer>();
         GameMode = PlayerPrefs.GetInt("GameMode");
         ball.chooseDirection();
         ball.Movement();
@@ -262,7 +264,6 @@ public class GM : MonoBehaviour
         var maxCount = powerUpIDs.Count;
         var activePowerUp = powerUpIDs[Random.Range(0, maxCount)];
         powerUpUser = lastContactPlayer;
-        activePowerUp = 2;
         activePowerUpID = activePowerUp;
         
         switch (activePowerUp)
@@ -358,16 +359,16 @@ public class GM : MonoBehaviour
         if (Resetstatus)
         {
                 float alpha = 255;
-                Color ballSpriteColor = ballSprite.color;
+                Color ballSpriteColor = _ballSprite.color;
                 ballSpriteColor.a = alpha;
-                ballSprite.color = ballSpriteColor;
+                _ballSprite.color = ballSpriteColor;
         }
         else
         {
             float alpha = 0;
-            Color ballSpriteColor = ballSprite.color;
+            Color ballSpriteColor = _ballSprite.color;
             ballSpriteColor.a = alpha;
-            ballSprite.color = ballSpriteColor;
+            _ballSprite.color = ballSpriteColor;
         }
     }
 }

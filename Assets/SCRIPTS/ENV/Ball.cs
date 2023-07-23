@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
@@ -8,21 +9,21 @@ using Random = UnityEngine.Random;
 public class Ball : MonoBehaviour
 {
     [SerializeField] public float ballSpeed;
-    [SerializeField] private int chosenSide;
+    [SerializeField] private ENUM.PlayerSide chosenSide;
     [SerializeField] private string lastPlayerContact;
     [SerializeField] private GM gameManager;
 
     public Rigidbody2D rb;
+    
     // Start is called before the first frame update
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    public int chooseDirection()
+    public ENUM.PlayerSide chooseDirection()
     {
-        return Random.Range(0, 2);
-        //0 - Left, 1 - Right
+        return Random.Range(0, 2) == 0 ? ENUM.PlayerSide.Left : ENUM.PlayerSide.Right;
     }
 
     public void Reset()
@@ -35,7 +36,7 @@ public class Ball : MonoBehaviour
         chosenSide = chooseDirection();
         var coordY = Random.Range(-1, 2); 
         
-        if (chosenSide == 1)
+        if (chosenSide == ENUM.PlayerSide.Right)
         {
             rb.velocity = new Vector2(1, coordY) * ballSpeed;
         }
@@ -64,9 +65,8 @@ public class Ball : MonoBehaviour
         }
     }
 
-    private int GetLastPlayer()
+    private ENUM.PlayerVariation GetLastPlayer()
     {
-        //P1 - 0, P2 - 1
-        return lastPlayerContact.Contains("2") ? 1 : 0;
+        return lastPlayerContact.Contains("2") ? ENUM.PlayerVariation.P2 : ENUM.PlayerVariation.P1;
     }
 }
