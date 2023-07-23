@@ -3,20 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
     [SerializeField] private GameObject Page1;
     [SerializeField] private GameObject Page2;
     [SerializeField] private GameObject Page3;
-
+    [SerializeField] private GameObject Page4;
+    
     private List<GameObject> Book = new List<GameObject>();
 
+    [SerializeField] private Camera mainCamera;
+    [SerializeField] private Image bImage;
     private void Start()
     {
+        SetupBackground();
         Book.Add(Page1);
         Book.Add(Page2);
         Book.Add(Page3);
+        Book.Add(Page4);
 
         for (int i = 0; i < Book.Count; i++)
         {
@@ -40,6 +46,7 @@ public class MenuManager : MonoBehaviour
                 setSpeedP1(3);
                 setSpeedP2(3);
                 break;
+            
             case "P1VSAI":
                 PlayerPrefs.SetInt("P1", 0);
                 PlayerPrefs.SetInt("P2", 1);
@@ -48,10 +55,16 @@ public class MenuManager : MonoBehaviour
                 Book[1].SetActive(true);
                 Book[2].SetActive(false);
                 break;
+            
             case "AIVSAI":
                 PlayerPrefs.SetInt("P1", 1);
                 PlayerPrefs.SetInt("P2", 1);
                 SceneManager.LoadScene("GAME");
+                break;
+            
+            case "Options":
+                Book[0].SetActive(false);
+                Book[3].SetActive(true);
                 break;
             
             default:
@@ -86,6 +99,10 @@ public class MenuManager : MonoBehaviour
                 Book[page].SetActive(false);
                 Book[0].SetActive(true);
                 break;
+            case 3:
+                Book[page].SetActive(false);
+                Book[0].SetActive(true);
+                break;
             default: 
                 Book[0].SetActive(true);
                 break;
@@ -111,5 +128,48 @@ public class MenuManager : MonoBehaviour
     {
         // 0 - Classic, 1 - Modern
         PlayerPrefs.SetInt("GameMode", Mode);
+    }
+
+    public void SetupBackground()
+    {
+        var Color = PlayerPrefs.GetString("BG");
+
+        var ColorForCamera = new Color(0, 0, 0, 0);
+        switch (Color)
+        {
+            case "Red":
+                ColorForCamera = UnityEngine.Color.red;
+                break;
+            case "Blue":
+                ColorForCamera = UnityEngine.Color.blue;
+                break;
+            case "Green":
+                ColorForCamera = UnityEngine.Color.green;
+                break;
+            case "Black":
+                ColorForCamera = UnityEngine.Color.black;
+                break;
+            default:
+                ColorForCamera = UnityEngine.Color.black;
+                break;
+        }
+
+        mainCamera.backgroundColor = ColorForCamera;
+
+        if (bImage != null)
+        {
+            bImage.color = ColorForCamera;
+            if (ColorForCamera == UnityEngine.Color.black)
+            {
+                bImage.color = UnityEngine.Color.white;
+            }
+        }
+       
+    }
+
+    public void SetBackground(string Color)
+    {
+        PlayerPrefs.SetString("BG", Color);
+        SetupBackground();
     }
 }

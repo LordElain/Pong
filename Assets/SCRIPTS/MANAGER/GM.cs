@@ -29,7 +29,8 @@ public class GM : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Text scoreP1_Text;
     [SerializeField] private Text scoreP2_Text;
-    
+
+    [SerializeField] private MenuManager _menuManager;
     #endregion
 
     [Header("Playerfield")]
@@ -95,6 +96,7 @@ public class GM : MonoBehaviour
     // Start is called before the first frame update1
     void Start()
     {
+        _menuManager.SetupBackground();
         stageDimensions = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.nearClipPlane));
         SpawnPowerUp();
         SetupPosition();
