@@ -11,6 +11,8 @@ public class GM : MonoBehaviour
     #region GameRunning
     
     [SerializeField] private Ball ball;
+
+    private SpriteRenderer ballSprite;
     [Range(0,1)]
     [SerializeField] private int GameMode;
 
@@ -69,6 +71,10 @@ public class GM : MonoBehaviour
     [SerializeField] private float powerUpSpawnTimer; 
     [SerializeField] private float powerUpSkillTimer;
     
+    [SerializeField] private float powerUpBlinkTimer;
+    [SerializeField] private float powerUpBlinkTimeStore;
+    [SerializeField] private float powerUpBlinkTime;
+    
     
     [SerializeField] private float powerUpCooldown; 
     [SerializeField] private float powerUpSpawnCooldown; 
@@ -94,6 +100,7 @@ public class GM : MonoBehaviour
         SetupPosition();
         Setup();
         SetupOGValues();
+        ballSprite = ball.GetComponent<SpriteRenderer>();
         GameMode = PlayerPrefs.GetInt("GameMode");
         ball.chooseDirection();
         ball.Movement();
@@ -252,8 +259,8 @@ public class GM : MonoBehaviour
         powerupActive = true;
         var maxCount = powerUpIDs.Count;
         var activePowerUp = powerUpIDs[Random.Range(0, maxCount)];
-        activePowerUp = 1;
         powerUpUser = lastContactPlayer;
+        activePowerUp = 2;
         activePowerUpID = activePowerUp;
         
         switch (activePowerUp)
@@ -263,6 +270,9 @@ public class GM : MonoBehaviour
                 break;        
             case 1:
                 PowerUp_Size(false);
+                break;
+            case 2:
+                PowerUp_Blink(false);
                 break;
             default:
                 break;
@@ -280,6 +290,9 @@ public class GM : MonoBehaviour
                 break;
             case 1:
                 PowerUp_Size(true);
+                break;
+            case 2:
+                PowerUp_Blink(true);
                 break;
             default:
                 break;
@@ -335,6 +348,24 @@ public class GM : MonoBehaviour
             {
                 _gameObject_player2.transform.localScale += new Vector3(0, powerUpSize, 0);
             }
+        }
+    }
+
+    void PowerUp_Blink(bool Resetstatus)
+    {
+        if (Resetstatus)
+        {
+                float alpha = 255;
+                Color ballSpriteColor = ballSprite.color;
+                ballSpriteColor.a = alpha;
+                ballSprite.color = ballSpriteColor;
+        }
+        else
+        {
+            float alpha = 0;
+            Color ballSpriteColor = ballSprite.color;
+            ballSpriteColor.a = alpha;
+            ballSprite.color = ballSpriteColor;
         }
     }
 }

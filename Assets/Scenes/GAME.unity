@@ -1340,7 +1340,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -18.1, y: -33}
+  m_AnchoredPosition: {x: -35.9, y: -31.4}
   m_SizeDelta: {x: 193.6, y: 87.865}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &555272177
@@ -2546,20 +2546,26 @@ MonoBehaviour:
   player2: {fileID: 642738932}
   p1Vel: 6
   p2Vel: 6
+  p1Size: {x: 0, y: 0, z: 0}
+  p2Size: {x: 0, y: 0, z: 0}
   ballVel: 0
   lastContactPlayer: 0
   powerUpUsed: 0
   powerUp: {fileID: 1259606688}
-  activePowerUpID: 0
+  activePowerUpID: 3
   powerUpUser: 0
-  powerUpIDs: 00000000
+  powerUpIDs: 000000000100000002000000
   powerupActive: 0
   powerUpSpawnTimer: 0
   powerUpSkillTimer: 0
+  powerUpBlinkTimer: 10
+  powerUpBlinkTimeStore: 0
+  powerUpBlinkTime: 0
   powerUpCooldown: 5
-  powerUpSpawnCooldown: 10
+  powerUpSpawnCooldown: 5
   test: 
   powerUpSpeed: 8
+  powerUpSize: 4
 --- !u!4 &1267661595
 Transform:
   m_ObjectHideFlags: 0
