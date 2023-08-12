@@ -1,18 +1,18 @@
-using System;
 using System.Collections.Generic;
+using MANAGER;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 
-namespace DefaultNamespace.ENV
+namespace ENV
 {
     public class PowerUps : MonoBehaviour
     {
-        public ENUM.PlayerVariation lastContactPlayer;
+        public Enum.PlayerVariation lastContactPlayer;
 
         public GameObject powerUp;
         [SerializeField] private int activePowerUpID;
-        [SerializeField] private ENUM.PlayerVariation powerUpUser;
+        [SerializeField] private Enum.PlayerVariation powerUpUser;
         [SerializeField] private List<int> powerUpIDs = new List<int>();
 
         
@@ -20,7 +20,6 @@ namespace DefaultNamespace.ENV
         public int p2Vel;
         [SerializeField] private Vector3 p1Size;
         [SerializeField] private Vector3 p2Size;
-        [SerializeField] private float ballVel;
         
         [Header("PowerUp Values")]
         #region powerUpValues
@@ -31,19 +30,19 @@ namespace DefaultNamespace.ENV
         private SpriteRenderer _ballSprite;
         #endregion
         
-        [SerializeField] private GM _gm;
+        [SerializeField] private Gm gm;
 
         private void Start()
         {
-            SetupOGValues();
-            _ballSprite = _gm.ball.GetComponent<SpriteRenderer>();
+            SetupOriginalValues();
+            _ballSprite = gm.ball.GetComponent<SpriteRenderer>();
         }
 
         public void RandomPowerUp()
         {
-            _gm.powerUpUsed = false;
+            gm.powerUpUsed = false;
             powerUp.SetActive(false);
-            _gm.powerUpActive = true;
+            gm.powerUpActive = true;
             var maxCount = powerUpIDs.Count;
             var activePowerUp = powerUpIDs[Random.Range(0, maxCount)];
             powerUpUser = lastContactPlayer;
@@ -60,15 +59,13 @@ namespace DefaultNamespace.ENV
             case 2:
                 PowerUp_Blink(false);
                 break;
-            default:
-                break;
         }
 
     }
 
     public void ResetPowerUp()
     {
-        _gm.powerUpActive = false;
+        gm.powerUpActive = false;
         switch (activePowerUpID)
         {
             case 0: 
@@ -80,66 +77,64 @@ namespace DefaultNamespace.ENV
             case 2:
                 PowerUp_Blink(true);
                 break;
-            default:
-                break;
         }
     }
 
-    void PowerUp_Speed(bool Resetstatus)
+    void PowerUp_Speed(bool resetStatus)
     {
-        if (Resetstatus)
+        if (resetStatus)
         {
             if (powerUpUser == 0)
             {
-                _gm.player1.playerSpeed = p1Vel;
+                gm.player1.playerSpeed = p1Vel;
             }
             else
             {
-                _gm.player2.playerSpeed = p2Vel;
+                gm.player2.playerSpeed = p2Vel;
             }
         }
         else
         {
             if (lastContactPlayer == 0)
             {
-                _gm.player1.playerSpeed = powerUpSpeed;
+                gm.player1.playerSpeed = powerUpSpeed;
             }
             else
             {
-                _gm.player2.playerSpeed = powerUpSpeed;
+                gm.player2.playerSpeed = powerUpSpeed;
             }
         }
     }
 
-    void PowerUp_Size(bool Resetstatus)
+    void PowerUp_Size(bool resetStatus)
     {
-        if (Resetstatus)
+        if (resetStatus)
         {
             if (powerUpUser == 0)
             {
-                _gm._gameObject_player.transform.localScale = p1Size;
+                gm.gameObjectPlayer.transform.localScale = p1Size;
             }
             else
             {
-                _gm._gameObject_player2.transform.localScale = p2Size;
+                gm.gameObjectPlayer2.transform.localScale = p2Size;
             }
         }
         else
         {
             if (powerUpUser == 0)
             {
-                _gm._gameObject_player.transform.localScale += new Vector3(0, powerUpSize, 0);
+                gm.gameObjectPlayer.transform.localScale += new Vector3(0, powerUpSize, 0);
             }
             else
             {
-                _gm._gameObject_player2.transform.localScale += new Vector3(0, powerUpSize, 0);
+                gm.gameObjectPlayer2.transform.localScale += new Vector3(0, powerUpSize, 0);
             }
         }
     }
 
-    void PowerUp_Blink(bool Resetstatus)
+    void PowerUp_Blink(bool resetStatus)
     {
-        if (Resetstatus)
+        if (resetStatus)
         {
                 float alpha = 255;
                 Color ballSpriteColor = _ballSprite.color;
@@ -155,15 +150,14 @@ namespace DefaultNamespace.ENV
         }
     }
     
-    void SetupOGValues()
+    void SetupOriginalValues()
     {
-        _gm.player1.playerSpeed = PlayerPrefs.GetInt("P1Speed");
-        _gm.player2.playerSpeed = PlayerPrefs.GetInt("P2Speed");
-        p1Vel = _gm.player1.playerSpeed;
-        p2Vel = _gm.player2.playerSpeed;
-        p1Size = _gm._gameObject_player.transform.localScale;
-        p2Size = _gm._gameObject_player2.transform.localScale;
-        ballVel = _gm.ball.ballSpeed;
+        gm.player1.playerSpeed = PlayerPrefs.GetInt("P1Speed");
+        gm.player2.playerSpeed = PlayerPrefs.GetInt("P2Speed");
+        p1Vel = gm.player1.playerSpeed;
+        p2Vel = gm.player2.playerSpeed;
+        p1Size = gm.gameObjectPlayer.transform.localScale;
+        p2Size = gm.gameObjectPlayer2.transform.localScale;
     }
     }
 }

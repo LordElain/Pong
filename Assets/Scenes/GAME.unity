@@ -308,7 +308,7 @@ MonoBehaviour:
   chosenSide: 0
   lastPlayerContact: 
   gameManager: {fileID: 1267661594}
-  rb: {fileID: 0}
+  rb: {fileID: 79062874}
 --- !u!212 &79062873
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1634,12 +1634,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpeed: 6
-  playerPos_X: 0
-  playerPos_Y: 0
+  playerPosX: 0
+  playerPosY: 0
   playerPos: {x: 0, y: 0}
   isPlayer1: 0
   isPlayerAi: 1
-  Paused: 0
+  paused: 0
   lerpSpeed: 3
   ball: {fileID: 79062872}
 --- !u!114 &642738933
@@ -1701,10 +1701,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4250efd2c114a4cb9b86257c9bc78e6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Page1: {fileID: 0}
-  Page2: {fileID: 0}
-  Page3: {fileID: 0}
-  Page4: {fileID: 0}
+  page1: {fileID: 0}
+  page2: {fileID: 0}
+  page3: {fileID: 0}
+  page4: {fileID: 0}
   mainCamera: {fileID: 519420031}
   bImage: {fileID: 0}
 --- !u!4 &695442135
@@ -2302,12 +2302,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpeed: 6
-  playerPos_X: 0
-  playerPos_Y: 0
+  playerPosX: 0
+  playerPosY: 0
   playerPos: {x: 0, y: 0}
   isPlayer1: 1
   isPlayerAi: 0
-  Paused: 0
+  paused: 0
   lerpSpeed: 3
   ball: {fileID: 79062872}
 --- !u!50 &1240957657
@@ -2472,7 +2472,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -5177388603050735206, guid: cc35afd292fc349128b36a291fb3a165, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2532,9 +2532,9 @@ BoxCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
+    border: {x: 0.25, y: 0.25, z: 0.25, w: 0.25}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 0.984375, y: 0.984375}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -2559,15 +2559,14 @@ MonoBehaviour:
   powerUp: {fileID: 1259606688}
   activePowerUpID: 0
   powerUpUser: 0
-  powerUpIDs: 
+  powerUpIDs: 000000000100000002000000
   p1Vel: 0
   p2Vel: 0
   p1Size: {x: 0, y: 0, z: 0}
   p2Size: {x: 0, y: 0, z: 0}
-  ballVel: 0
-  powerUpSpeed: 0
-  powerUpSize: 0
-  _gm: {fileID: 1267661594}
+  powerUpSpeed: 6
+  powerUpSize: 3
+  gm: {fileID: 1267661594}
 --- !u!1 &1267661593
 GameObject:
   m_ObjectHideFlags: 0
@@ -2598,19 +2597,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ball: {fileID: 79062872}
-  GameMode: 0
+  gameMode: 0
   stageDimensions: {x: 0, y: 0, z: 0}
   canvasPauseMenu: {fileID: 471352361}
-  mainCamera: {fileID: 519420031}
-  scoreP1_Text: {fileID: 555272177}
-  scoreP2_Text: {fileID: 1095767386}
+  scoreP1Text: {fileID: 555272177}
+  scoreP2Text: {fileID: 1095767386}
   menuManager: {fileID: 695442134}
-  wall_Left: {fileID: 1073939487}
-  wall_Right: {fileID: 1399168811}
-  wall_Up: {fileID: 1717770435}
-  wall_Down: {fileID: 272848793}
-  _gameObject_player: {fileID: 1240957653}
-  _gameObject_player2: {fileID: 642738927}
+  wallLeft: {fileID: 1073939487}
+  wallRight: {fileID: 1399168811}
+  wallUp: {fileID: 1717770435}
+  wallDown: {fileID: 272848793}
+  gameObjectPlayer: {fileID: 1240957653}
+  gameObjectPlayer2: {fileID: 642738927}
   player1: {fileID: 1240957656}
   player2: {fileID: 642738932}
   lastContactPlayer: 0
@@ -2620,9 +2618,9 @@ MonoBehaviour:
   powerUpSkillTimer: 0
   powerUpCooldown: 5
   powerUpSpawnCooldown: 5
-  _powerUps: {fileID: 1259606692}
-  _gameObjectPowerUP: {fileID: 1259606688}
-  test: 
+  powerUps: {fileID: 1259606692}
+  gameObjectPowerUp: {fileID: 1259606688}
+  testTextArea: 
 --- !u!4 &1267661595
 Transform:
   m_ObjectHideFlags: 0

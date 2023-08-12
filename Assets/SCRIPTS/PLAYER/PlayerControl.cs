@@ -1,89 +1,93 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using ENV;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
+using UnityEngine.Serialization;
 
-public class PlayerControl : MonoBehaviour
+namespace PLAYER
 {
-    // Start is called before the first frame update
-    [SerializeField] public int playerSpeed;
-    [SerializeField] private float playerPos_X;
-    [SerializeField] private float playerPos_Y;
-    [SerializeField] private Vector2 playerPos;
-    [SerializeField] public bool isPlayer1;
-    [SerializeField] public bool isPlayerAi;
-    [SerializeField] public bool Paused;
-    [SerializeField] private float lerpSpeed;
-
-    private Control newPlayerInput;
-
-    [SerializeField] private Ball ball;
-
-    private Rigidbody2D rb;
-    void Start()
+    public class PlayerControl : MonoBehaviour
     {
-        rb = GetComponent<Rigidbody2D>();
-        Paused = false;
-        newPlayerInput = new Control();
-        playerPos_X = 0;
-        playerPos = new Vector2(playerPos_X, playerPos_Y);
-        newPlayerInput.Enable();
+        // Start is called before the first frame update
+        [SerializeField] public int playerSpeed;
+        [FormerlySerializedAs("playerPos_X")] [SerializeField] private float playerPosX;
+        [FormerlySerializedAs("playerPos_Y")] [SerializeField] private float playerPosY;
+        [SerializeField] private Vector2 playerPos;
+        [SerializeField] public bool isPlayer1;
+        [SerializeField] public bool isPlayerAi;
+        [FormerlySerializedAs("Paused")] [SerializeField] public bool paused;
+        [SerializeField] private float lerpSpeed;
+
+        private Control _newPlayerInput;
+
+        [SerializeField] private Ball ball;
+
+        private Rigidbody2D _rb;
+        void Start()
+        {
+            _rb = GetComponent<Rigidbody2D>();
+            paused = false;
+            _newPlayerInput = new Control();
+            playerPosX = 0;
+            playerPos = new Vector2(playerPosX, playerPosY);
+            _newPlayerInput.Enable();
         
-        if (isPlayer1)
-        {
-            newPlayerInput.Gameplay.Movement.performed += moving =>
+            /* Control logic for movement */
+            if (isPlayer1)
             {
-                playerPos.y = moving.ReadValue<float>();
-            };
+                _newPlayerInput.Gameplay.Movement.performed += moving =>
+                {
+                    playerPos.y = moving.ReadValue<float>();
+                };
 
-            newPlayerInput.Gameplay.Pause.performed += context =>
-            {
-                Paused = !Paused;
-            };
-        }
-        else
-        {
-            newPlayerInput.Gameplay.Movement2.performed += moving =>
-            {
-                playerPos.y = moving.ReadValue<float>();
-            };
-        }
-    }
-
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        UpdatePosition(playerPos);
-        if (isPlayerAi)
-        {
-            if (ball.transform.position.y > transform.position.y)
-            {
-                if (rb.velocity.y < 0) rb.velocity = Vector2.zero;
-                playerPos = Vector2.up;
-                UpdatePosition(playerPos);
+                _newPlayerInput.Gameplay.Pause.performed += context =>
+                {
+                    paused = !paused;
+                };
             }
             else
             {
-                if (rb.velocity.y > 0) rb.velocity = Vector2.zero;
-                playerPos = Vector2.down;
-                UpdatePosition(playerPos);
+                _newPlayerInput.Gameplay.Movement2.performed += moving =>
+                {
+                    playerPos.y = moving.ReadValue<float>();
+                };
             }
-            
         }
-    }
 
-    void UpdatePosition(Vector2 PlayerPos)
-    {
-        rb.velocity = Vector2.Lerp(rb.velocity, PlayerPos * playerSpeed, lerpSpeed * Time.deltaTime);
-    }
-
-    private void OnCollisionEnter2D(Collision2D col)
-    {
-        if (col.transform.tag == "WALL")
+        // Update is called once per frame
+        void FixedUpdate()
         {
-            rb.velocity = Vector2.zero;
+            UpdatePosition();
+        
+            /* The "Ai" is following the position of the ball and updating the playerPosition accordingly*/
+            if (isPlayerAi)
+            {
+                if (ball.transform.position.y > transform.position.y)
+                {
+                    if (_rb.velocity.y < 0) _rb.velocity = Vector2.zero;
+                    playerPos = Vector2.up;
+                    UpdatePosition();
+                }
+                else
+                {
+                    if (_rb.velocity.y > 0) _rb.velocity = Vector2.zero;
+                    playerPos = Vector2.down;
+                    UpdatePosition();
+                }
+            
+            }
+        }
+
+        void UpdatePosition()
+        {
+            _rb.velocity = Vector2.Lerp(_rb.velocity, playerPos * playerSpeed, lerpSpeed * Time.deltaTime);
+        }
+
+        private void OnCollisionEnter2D(Collision2D col)
+        {
+            /*Checking the collision with wall to simulate a stop*/
+            if (col.transform.CompareTag("WALL"))
+            {
+                _rb.velocity = Vector2.zero;
+            }
         }
     }
 }

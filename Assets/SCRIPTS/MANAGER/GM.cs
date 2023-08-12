@@ -1,233 +1,242 @@
-using System.Collections;
-using System.Collections.Generic;
-using DefaultNamespace;
-using DefaultNamespace.ENV;
+using ENV;
+using PLAYER;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+// ReSharper disable MemberCanBePrivate.Global
 
-public class GM : MonoBehaviour
+namespace MANAGER
 {
-
-    [Header("GameRunning")]
-    #region GameRunning
-    
-    public Ball ball;
-    
-    [Range(0,1)]
-    [SerializeField] private ENUM.GameMode GameMode;
-
-    #endregion
-
-    [Header("UI")]
-    #region UI
-    
-    private int scoreP1;
-    private int scoreP2;
-    [Tooltip("Resolution of screen")]
-    [SerializeField] private Vector3 stageDimensions;
-    [SerializeField] private GameObject canvasPauseMenu;
-    [SerializeField] private Camera mainCamera;
-    [SerializeField] private Text scoreP1_Text;
-    [SerializeField] private Text scoreP2_Text;
-
-    [SerializeField] private MenuManager menuManager;
-    #endregion
-
-    [Header("Playerfield")]
-    #region Playfield
-    
-    [SerializeField] private GameObject wall_Left;
-    [SerializeField] private GameObject wall_Right;
-    [SerializeField] private GameObject wall_Up;
-    [SerializeField] private GameObject wall_Down;
-    public GameObject _gameObject_player;
-    public GameObject _gameObject_player2;
-    
-    #endregion
-    
-    [Header("Player")]
-    #region Player
-
-    public PlayerControl player1;
-    public PlayerControl player2;
-
-
-    #endregion
-    
-    [Header("PowerUp")]
-    #region powerUp
-    
-    [SerializeField] public ENUM.PlayerVariation lastContactPlayer;
-    public bool powerUpUsed;
-    public bool powerUpActive;
-    [SerializeField] private float powerUpSpawnTimer; 
-    [SerializeField] private float powerUpSkillTimer;
-    
-    [SerializeField] private float powerUpCooldown; 
-    [SerializeField] private float powerUpSpawnCooldown;
-
-    [SerializeField] private PowerUps _powerUps;
-    [SerializeField] private GameObject _gameObjectPowerUP;
-    
-    [TextArea ()] 
-    [SerializeField] private string test;
-
-    #endregion
-
-
-    // Start is called before the first frame update1
-    void Start()
+    public class Gm : MonoBehaviour
     {
-        menuManager.SetupBackground();
-        stageDimensions = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.nearClipPlane));
-       
-        if (GameMode == ENUM.GameMode.Modern)
-        {
-            SpawnPowerUp();
-        }
-            
-        SetupPosition();
-        Setup();
-   
-        GameMode = (ENUM.GameMode)PlayerPrefs.GetInt("GameMode");
-        ball.chooseDirection();
-        ball.Movement();
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (!player1.Paused)
+        [Header("GameRunning")]
+        #region GameRunning
+    
+        public Ball ball;
+    
+        [FormerlySerializedAs("GameMode")]
+        [Range(0,1)]
+        [SerializeField] private Enum.GameMode gameMode;
+
+        #endregion
+
+        [Header("UI")]
+        #region UI
+    
+        private int _scoreP1;
+        private int _scoreP2;
+        [Tooltip("Resolution of screen")]
+        [SerializeField] private Vector3 stageDimensions;
+        [SerializeField] private GameObject canvasPauseMenu;
+        
+        [FormerlySerializedAs("scoreP1_Text")] [SerializeField] private Text scoreP1Text;
+        [FormerlySerializedAs("scoreP2_Text")] [SerializeField] private Text scoreP2Text;
+
+        [SerializeField] private MenuManager menuManager;
+        #endregion
+
+        [FormerlySerializedAs("wall_Left")]
+        [Header("Player field")]
+        #region Playfield
+    
+        [SerializeField] private GameObject wallLeft;
+        [FormerlySerializedAs("wall_Right")] [SerializeField] private GameObject wallRight;
+        [FormerlySerializedAs("wall_Up")] [SerializeField] private GameObject wallUp;
+        [FormerlySerializedAs("wall_Down")] [SerializeField] private GameObject wallDown;
+        [FormerlySerializedAs("_gameObject_player")] public GameObject gameObjectPlayer;
+        [FormerlySerializedAs("_gameObject_player2")] public GameObject gameObjectPlayer2;
+    
+        #endregion
+    
+        [Header("Player")]
+        #region Player
+
+        public PlayerControl player1;
+        public PlayerControl player2;
+
+
+        #endregion
+    
+        [Header("PowerUp")]
+        #region powerUp
+    
+        [SerializeField] public Enum.PlayerVariation lastContactPlayer;
+        public bool powerUpUsed;
+        public bool powerUpActive;
+        [SerializeField] private float powerUpSpawnTimer; 
+        [SerializeField] private float powerUpSkillTimer;
+    
+        [SerializeField] private float powerUpCooldown; 
+        [SerializeField] private float powerUpSpawnCooldown;
+
+        [FormerlySerializedAs("_powerUps")] [SerializeField] private PowerUps powerUps;
+        [FormerlySerializedAs("_gameObjectPowerUP")] [SerializeField] private GameObject gameObjectPowerUp;
+    
+        [TextArea ()] 
+        [SerializeField] private string testTextArea;
+
+        #endregion
+
+
+        // Start is called before the first frame update1
+        void Start()
         {
-            UnpauseMenu();
-            if (GameMode != ENUM.GameMode.Modern) return;
-            if (!powerUpActive)
+            menuManager.SetupBackground();
+            if (Camera.main != null)
             {
-                if (!_gameObjectPowerUP.activeSelf)
+                stageDimensions = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.nearClipPlane));
+            }
+            
+            if (gameMode == Enum.GameMode.Modern)
+            {
+                SpawnPowerUp();
+            }
+            
+            SetupPosition();
+            Setup();
+   
+            gameMode = (Enum.GameMode)PlayerPrefs.GetInt("GameMode");
+            ball.ChooseDirection();
+            ball.Movement();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (!player1.paused)
+            {
+                UnpauseMenu();
+                if (gameMode != Enum.GameMode.Modern) return;
+            
+                /*PowerUp Spawn logic*/
+                if (!powerUpActive)
                 {
-                    powerUpSpawnTimer += Time.deltaTime;
-                    
-                    if (powerUpSpawnTimer >= (powerUpSpawnCooldown + Random.Range(0,4)))
+                    if (!gameObjectPowerUp.activeSelf)
                     {
-                        powerUpSpawnTimer = 0;
-                        SpawnPowerUp();
+                        powerUpSpawnTimer += Time.deltaTime;
+                    
+                        if (powerUpSpawnTimer >= (powerUpSpawnCooldown + Random.Range(0,4)))
+                        {
+                            powerUpSpawnTimer = 0;
+                            SpawnPowerUp();
+                        }
+                    }
+                
+                    if (powerUpUsed)
+                    {
+                        powerUps.RandomPowerUp();
                     }
                 }
-                
-                if (powerUpUsed)
+
+                else
                 {
-                    _powerUps.RandomPowerUp();
+                    powerUpSkillTimer += Time.deltaTime;
+                    if (powerUpSkillTimer < powerUpCooldown) return;
+                    powerUpSkillTimer = 0;
+                    powerUps.ResetPowerUp();
                 }
             }
-
             else
             {
-                powerUpSkillTimer += Time.deltaTime;
-                if (powerUpSkillTimer < powerUpCooldown) return;
-                powerUpSkillTimer = 0;
-                _powerUps.ResetPowerUp();
+                PauseMenu();
             }
         }
-        else
-        {
-            PauseMenu();
-        }
-    }
     
-    public void Goal(string WallName)
-    {
-        addPoints(WallName);
-        ball.Reset();
-        ball.Movement();
-    }
-
-    void addPoints(string WallName)
-    {
-        if (WallName.Contains("LEFT"))
+        public void Goal(string wallName)
         {
-            scoreP1++;
+            AddPoints(wallName);
+            ball.Reset();
+            ball.Movement();
         }
-        else
+
+        void AddPoints(string wallName)
         {
-            scoreP2++;
+            if (wallName.Contains("LEFT"))
+            {
+                _scoreP1++;
+            }
+            else
+            {
+                _scoreP2++;
+            }
+            UpdateUI();
         }
-        updateUI();
-    }
 
-    void SetupPosition()
-    {
+        void SetupPosition()
+        {
+            wallLeft.transform.position = new Vector3(-stageDimensions.x - 0.5f, 0, 0);
+            wallRight.transform.position = new Vector3(stageDimensions.x + 0.5f, 0,0);
+            wallUp.transform.position = new Vector3(0,stageDimensions.y - 0.2f,0);
+            wallDown.transform.position = new Vector3(0, -stageDimensions.y + 0.2f, 0);
 
-        wall_Left.transform.position = new Vector3(-stageDimensions.x - 0.5f, 0, 0);
-        wall_Right.transform.position = new Vector3(stageDimensions.x + 0.5f, 0,0);
-        wall_Up.transform.position = new Vector3(0,stageDimensions.y - 0.2f,0);
-        wall_Down.transform.position = new Vector3(0, -stageDimensions.y + 0.2f, 0);
+            gameObjectPlayer.transform.position = new Vector3(stageDimensions.x - 1f, 0, 0);
+            gameObjectPlayer2.transform.position = new Vector3(-stageDimensions.x + 1f, 0, 0);
+        }
 
-        _gameObject_player.transform.position = new Vector3(stageDimensions.x - 1f, 0, 0);
-        _gameObject_player2.transform.position = new Vector3(-stageDimensions.x + 1f, 0, 0);
-    }
+        void UpdateUI()
+        {
+            scoreP1Text.text = _scoreP1.ToString();
+            scoreP2Text.text = _scoreP2.ToString();
+        }
 
-    void updateUI()
-    {
-        scoreP1_Text.text = scoreP1.ToString();
-        scoreP2_Text.text = scoreP2.ToString();
-    }
-
-    void Setup()
-    {
-        var P1 = PlayerPrefs.GetInt("P1");
+        void Setup()
+        {
+            var p1 = PlayerPrefs.GetInt("P1");
         
-        if (P1 == 0)
-        {
-            player1.isPlayer1 = true;
-            player1.isPlayerAi = false;
-        }
-        else
-        {
-            player1.isPlayer1 = true;
-            player1.isPlayerAi = true;
-        }
+            if (p1 == 0)
+            {
+                player1.isPlayer1 = true;
+                player1.isPlayerAi = false;
+            }
+            else
+            {
+                player1.isPlayer1 = true;
+                player1.isPlayerAi = true;
+            }
 
-        var P2 = PlayerPrefs.GetInt("P2");
+            var p2 = PlayerPrefs.GetInt("P2");
         
-        if (P2 == 0)
-        {
-            player2.isPlayer1 = false;
-            player2.isPlayerAi = false;
+            if (p2 == 0)
+            {
+                player2.isPlayer1 = false;
+                player2.isPlayerAi = false;
+            }
+            else
+            {
+                player2.isPlayer1 = false;
+                player2.isPlayerAi = true;
+            }
         }
-        else
+
+        void PauseMenu()
         {
-            player2.isPlayer1 = false;
-            player2.isPlayerAi = true;
+            Time.timeScale = 0;
+            canvasPauseMenu.SetActive(true);
         }
-    }
 
-    void PauseMenu()
-    {
-        Time.timeScale = 0;
-        canvasPauseMenu.SetActive(true);
-    }
+        public void UnpauseMenu()
+        {
+            Time.timeScale = 1;
+            player1.paused = false;
+            canvasPauseMenu.SetActive(false);
+        }
 
-    public void UnpauseMenu()
-    {
-        Time.timeScale = 1;
-        player1.Paused = false;
-        canvasPauseMenu.SetActive(false);
-    }
-
-    public void QuitGame()
-    {
-        SceneManager.LoadScene("MAIN MENU");
-    }
+        public void QuitGame()
+        {
+            SceneManager.LoadScene("MAIN MENU");
+        }
     
-    [ContextMenu("Spawn")]
-    void SpawnPowerUp()
-    {
-        var coordX = Random.Range(-stageDimensions.x + 2, stageDimensions.x - 1);
-        var coordY = Random.Range(-stageDimensions.y + 1, stageDimensions.y); 
+        [ContextMenu("Spawn")]
+        void SpawnPowerUp()
+        {
+            /*The magic numbers are used so the powerUP is not spawned in either walls*/
+            var coordX = Random.Range(-stageDimensions.x + 1.5f, stageDimensions.x - 1.5f);
+            var coordY = Random.Range(-stageDimensions.y + 1.5f, stageDimensions.y - 1.5f); 
         
-        _powerUps.transform.position = new Vector3(coordX, coordY, 0);
-        _gameObjectPowerUP.SetActive(true);
+            powerUps.transform.position = new Vector3(coordX, coordY, 0);
+            gameObjectPowerUp.SetActive(true);
+        }
     }
 }
