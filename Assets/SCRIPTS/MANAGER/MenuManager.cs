@@ -11,11 +11,12 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject Page2;
     [SerializeField] private GameObject Page3;
     [SerializeField] private GameObject Page4;
-    
+
     private List<GameObject> Book = new List<GameObject>();
 
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Image bImage;
+
     private void Start()
     {
         SetupBackground();
@@ -28,7 +29,7 @@ public class MenuManager : MonoBehaviour
         {
             Book[i].SetActive(false);
         }
-        
+
         Book[0].SetActive(true);
     }
 
@@ -40,33 +41,33 @@ public class MenuManager : MonoBehaviour
             case "P1VSP2":
                 PlayerPrefs.SetInt("P1", 0);
                 PlayerPrefs.SetInt("P2", 0);
-                
+
                 Book[0].SetActive(false);
                 Book[2].SetActive(true);
                 setSpeedP1(3);
                 setSpeedP2(3);
                 break;
-            
+
             case "P1VSAI":
                 PlayerPrefs.SetInt("P1", 0);
                 PlayerPrefs.SetInt("P2", 1);
-                
+
                 Book[0].SetActive(false);
                 Book[1].SetActive(true);
                 Book[2].SetActive(false);
                 break;
-            
+
             case "AIVSAI":
                 PlayerPrefs.SetInt("P1", 1);
                 PlayerPrefs.SetInt("P2", 1);
                 SceneManager.LoadScene("GAME");
                 break;
-            
+
             case "Options":
                 Book[0].SetActive(false);
                 Book[3].SetActive(true);
                 break;
-            
+
             default:
                 PlayerPrefs.SetInt("P1", 0);
                 PlayerPrefs.SetInt("P2", 0);
@@ -74,8 +75,6 @@ public class MenuManager : MonoBehaviour
                 Book[2].SetActive(true);
                 break;
         }
-        
-    
     }
 
 
@@ -88,14 +87,14 @@ public class MenuManager : MonoBehaviour
     {
         switch (page)
         {
-            case 0: 
+            case 0:
                 Book[0].SetActive(true);
                 break;
             case 1:
                 Book[page].SetActive(false);
                 Book[0].SetActive(true);
                 break;
-            case 2: 
+            case 2:
                 Book[page].SetActive(false);
                 Book[0].SetActive(true);
                 break;
@@ -103,17 +102,17 @@ public class MenuManager : MonoBehaviour
                 Book[page].SetActive(false);
                 Book[0].SetActive(true);
                 break;
-            default: 
+            default:
                 Book[0].SetActive(true);
                 break;
         }
-
     }
 
     public void setSpeedP2(int Speed)
     {
         PlayerPrefs.SetInt("P2Speed", Speed);
     }
+
     public void setSpeedP1(int Speed)
     {
         PlayerPrefs.SetInt("P1Speed", Speed);
@@ -134,25 +133,17 @@ public class MenuManager : MonoBehaviour
     {
         var Color = PlayerPrefs.GetString("BG");
 
-        var ColorForCamera = new Color(0, 0, 0, 0);
-        switch (Color)
+        float BIGValue = 160 / 255f;
+        float SmolValue = 35 / 255f;
+
+        Color ColorForCamera = Color switch
         {
-            case "Red":
-                ColorForCamera = UnityEngine.Color.red;
-                break;
-            case "Blue":
-                ColorForCamera = UnityEngine.Color.blue;
-                break;
-            case "Green":
-                ColorForCamera = UnityEngine.Color.green;
-                break;
-            case "Black":
-                ColorForCamera = UnityEngine.Color.black;
-                break;
-            default:
-                ColorForCamera = UnityEngine.Color.black;
-                break;
-        }
+            "Red" => new Color(BIGValue, SmolValue, SmolValue),
+            "Green" => new Color(SmolValue, BIGValue, SmolValue),
+            "Blue" => new Color(SmolValue, SmolValue, BIGValue),
+            "Black" => UnityEngine.Color.black,
+            _ => UnityEngine.Color.black
+        };
 
         mainCamera.backgroundColor = ColorForCamera;
 
@@ -164,7 +155,6 @@ public class MenuManager : MonoBehaviour
                 bImage.color = UnityEngine.Color.white;
             }
         }
-       
     }
 
     public void SetBackground(string Color)

@@ -13,5 +13,11 @@ namespace DefaultNamespace
             Left,
             Right
         }
+
+        public enum GameMode
+        {
+            Classic,
+            Modern
+        }
     }
 }
