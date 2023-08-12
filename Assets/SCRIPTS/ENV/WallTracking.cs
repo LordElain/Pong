@@ -1,14 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using MANAGER;
 using UnityEngine;
 
 public class WallTracking : MonoBehaviour
 {
-    [SerializeField] private GM gm;
+    [SerializeField] private Gm gm;
     private void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag == "BALL")
+        if (col.gameObject.CompareTag("BALL"))
         {
             gm.Goal(gameObject.name);
         }
