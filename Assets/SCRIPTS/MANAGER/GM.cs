@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-// ReSharper disable MemberCanBePrivate.Global
+
 
 namespace MANAGER
 {
@@ -184,6 +184,7 @@ namespace MANAGER
         void Setup()
         {
             var p1 = PlayerPrefs.GetInt("P1");
+            var p1Speed = PlayerPrefs.GetInt("P1Speed");
         
             if (p1 == 0)
             {
@@ -196,8 +197,11 @@ namespace MANAGER
                 player1.isPlayerAi = true;
             }
 
+            player1.playerSpeed = p1Speed;
+            
             var p2 = PlayerPrefs.GetInt("P2");
-        
+            var p2Speed = PlayerPrefs.GetInt("P2Speed");
+            
             if (p2 == 0)
             {
                 player2.isPlayer1 = false;
@@ -208,6 +212,8 @@ namespace MANAGER
                 player2.isPlayer1 = false;
                 player2.isPlayerAi = true;
             }
+
+            player2.playerSpeed = p2Speed;
         }
 
         void PauseMenu()
